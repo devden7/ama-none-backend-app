@@ -1,0 +1,29 @@
+{
+  "name": "backend-simple-ecommerce",
+  "version": "1.0.0",
+  "description": "clone simple amazon",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "NODE_ENV=production MONGO_USER=devdenn7 MONGO_PASSWORD=gHfJGJ3hW6D4MILg MONGO_DEFAULT_DATA=ecommerce node app.js",
+    "start:dev": "nodemon app.js"
+  },
+  "keywords": [
+    "simple",
+    "clone",
+    "amazon"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.21"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "body-parse": "^0.1.0",
+    "express": "^4.18.2",
+    "express-validator": "^6.15.0",
+    "jsonwebtoken": "^9.0.1",
+    "mongodb": "^5.1.0"
+  }
+}
