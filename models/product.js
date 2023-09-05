@@ -35,13 +35,6 @@ class Product {
           .collection("products")
           .updateOne({ _id: this._id }, { $set: this });
       } else {
-        console.log(this);
-        console.log(this.harga);
-        console.log(typeof this.harga);
-        console.log("============");
-        console.log(this);
-        console.log(this.stok);
-        console.log(typeof this.stok);
         statDb = await db.collection("products").insertOne(this);
       }
       return statDb;
@@ -94,7 +87,7 @@ class Product {
         .next();
       return data;
     } catch (err) {
-      console.log(err, "error");
+      console.log(err);
     }
   }
 
@@ -134,14 +127,7 @@ class Product {
     keywordProduct
   ) {
     const db = takeDb();
-    console.log(
-      kategoriProduct,
-      hargaProduct,
-      ratingProduct,
-      listProduct,
-      numberPageProduct,
-      keywordProduct + " models"
-    );
+
     const splitHarga = hargaProduct.split("-");
     const hargaAwal = splitHarga.slice(0, 1).join();
     const hargaAkhir =
@@ -247,7 +233,6 @@ class Product {
         ratingProduct === "semua"
       ) {
         filterProduct = { nama: { $regex: keywordProduct, $options: "i" } };
-        console.log("SEARCHHHH");
       } /*jika keyword: "bukan semua" kategori : "bukan semua", harga : "semua", rating: "semua"*/ else if (
         keywordProduct !== "semua" &&
         kategoriProduct !== "semua" &&
@@ -258,7 +243,6 @@ class Product {
           nama: { $regex: keywordProduct, $options: "i" },
           kategori: kategoriProduct,
         };
-        console.log("SEARCHHHH");
       } /*jika keyword: "bukan semua" kategori : "bukan semua", harga : "bukan semua", rating: "semua"*/ else if (
         keywordProduct !== "semua" &&
         kategoriProduct !== "semua" &&
@@ -270,7 +254,6 @@ class Product {
           kategori: kategoriProduct,
           harga: { $gt: +hargaAwal, $lte: +hargaAkhir },
         };
-        console.log("SEARCHHHH");
       } /*jika keyword: "bukan semua" kategori : "bukan semua", harga : "bukan semua", rating: "bukan semua"*/ else if (
         keywordProduct !== "semua" &&
         kategoriProduct !== "semua" &&
@@ -283,7 +266,6 @@ class Product {
           harga: { $gt: +hargaAwal, $lte: +hargaAkhir },
           rating: { $gte: +ratingProduct, $lte: +ratingProduct + 1 },
         };
-        console.log("SEARCHHHH");
       } else {
         filterProduct = {};
       }
@@ -307,12 +289,19 @@ class Product {
     }
   }
 
-  static async reviewProduct(id, userId, userName, rating, review, tanggal) {
+  static async reviewProduct(
+    prodId,
+    userId,
+    userName,
+    rating,
+    review,
+    tanggal
+  ) {
     const userAkunId = new mongodb.ObjectId(userId);
     const db = takeDb();
     const cariReviewField = await db
       .collection("products")
-      .findOne({ _id: new mongodb.ObjectId(id) });
+      .findOne({ _id: new mongodb.ObjectId(prodId) });
 
     const totalRating = cariReviewField.review.reduce((quantity, item) => {
       return quantity + item.accountInfo.rating;
@@ -321,17 +310,15 @@ class Product {
     const calcRating = parseFloat(
       (totalRating / cariReviewField.review.length).toFixed(1)
     );
-    console.log(calcRating);
-    console.log(isNaN(calcRating));
-    console.log(typeof calcRating);
     await db.collection("products").updateOne(
-      { _id: new mongodb.ObjectId(id) },
+      { _id: new mongodb.ObjectId(prodId) },
       {
         $push: {
           review: {
             _id: new mongodb.ObjectId(),
             accountInfo: {
               userId: userAkunId,
+              prodId,
               userName,
               rating,
               review,

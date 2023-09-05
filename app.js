@@ -13,7 +13,7 @@ const productRoutes = require("./routes/products.js");
 const linkOrigin = ["http://localhost:3000", " https://amanone-app.vercel.app"];
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  console.log(origin);
+
   if (linkOrigin.includes(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
   }

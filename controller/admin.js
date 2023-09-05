@@ -45,7 +45,10 @@ exports.addProduct = async (req, res, next) => {
       product: { product },
     });
   } catch (err) {
-    console.log(err);
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
   }
 };
 
@@ -57,7 +60,10 @@ exports.getProductAdmin = async (req, res, next) => {
       product: product,
     });
   } catch (err) {
-    console.log(err);
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
   }
 };
 
@@ -167,7 +173,6 @@ exports.loginAccount = async (req, res, next) => {
       detailInfo: userAccount,
     });
   } catch (err) {
-    console.log(err);
     if (!err.statusCode) {
       err.statusCode = 500;
     }

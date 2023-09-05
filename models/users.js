@@ -125,31 +125,6 @@ class User {
       );
 
     return data;
-    /*
-    const cariItemIndex = itemCart.findIndex(
-      (itemIndex) => itemIndex.id === item.id
-    );
-    const itemReady = itemCart[cariItemIndex];
-
-    let itemInCart;
-
-    if (itemReady) {
-      const quanityAwal =
-        itemReady.totalBelanja === undefined ? 1 : itemReady.totalBelanja;
-      const updateItemTersedia = {
-        ...itemReady,
-        totalBelanja: quanityAwal + item.jumlahItem,
-      };
-      console.log(updateItemTersedia);
-      itemInCart = [...itemCart];
-      itemInCart[cariItemIndex] = updateItemTersedia;
-
-      setItemCart(itemInCart);
-    } else {
-      setItemCart([...itemCart, item]);
-    }
-    setTotalBelanja(totalBelanja + item.harga);
-    */
   }
 
   static async getFromCart() {
@@ -166,9 +141,6 @@ class User {
     const itemReady = this.cart[cariItemIndex];
 
     let itemInCart;
-
-    //const quanityAwal =
-    // itemReady.quantityItem === undefined ? 1 : itemReady.quantityItem;
 
     if (itemReady.quantityItem === 1) {
       itemInCart = this.cart.filter((itemIndex) => {
@@ -367,21 +339,17 @@ class User {
       .collection("orders")
       .find({ _id: new ObjectId(orderId) })
       .toArray();
-    // console.log(cariOrder[0].detailOrderan);
     const cariProduct = await db.collection("products").find().toArray();
-    // console.log(cariProduct);
+
     let cariReview;
     let data = [];
     for (let i = 0; i < cariOrder[0].detailOrderan.items.length; i++) {
-      // console.log(typeof this._id);
       for (let j = 0; j < cariProduct.length; j++) {
         if (
           new ObjectId(cariOrder[0].detailOrderan.items[i].id).toString() ===
           cariProduct[j]._id.toString()
         ) {
-          // console.log("ID DITEMUKAN");
           for (let k = 0; k < cariProduct[j].review.length; k++) {
-            // console.log("dari looping review");
             if (
               new ObjectId(
                 cariProduct[j].review[k].accountInfo.userId
@@ -389,7 +357,6 @@ class User {
             ) {
               cariReview = cariProduct[j].review[k];
               data.push(cariReview);
-              console.log(data);
             }
           }
         }

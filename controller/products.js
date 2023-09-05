@@ -75,7 +75,6 @@ exports.getFilterProduct = async (req, res, next) => {
   const listReq = req.query.list;
   const pageReq = req.query.page;
   const keywordReq = req.query.keyword;
-  console.log(kategoriReq + " controller");
   try {
     const filterProduct = await Product.filterProduct(
       kategoriReq,
@@ -156,7 +155,6 @@ exports.orderProduct = (req, res, next) => {
   const pembayaran = req.body.takeTypePembayaran;
   const totalBelanja = req.body.totalBelanja;
   const statusOrder = req.body.status;
-  console.log(userInfoPenerima);
 
   const errors = validationResult(req);
   try {
@@ -166,7 +164,6 @@ exports.orderProduct = (req, res, next) => {
       error.errorValidationMsg = errors.array();
       throw error;
     }
-    console.log(errors);
     User.postOrder(
       userInfoPenerima,
       tanggal,
