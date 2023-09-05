@@ -11,10 +11,10 @@ const adminRoutes = require("./routes/admin.js");
 const productRoutes = require("./routes/products.js");
 //setCors
 app.use((req, res, next) => {
-  res.setHeader(
-    "Access-Control-Allow-Origin",
-    "http://localhost:3000, https://amanone-app.vercel.app"
-  );
+  res.setHeader("Access-Control-Allow-Origin", [
+    "http://localhost:3000",
+    " https://amanone-app.vercel.app",
+  ]);
   res.setHeader(
     "Access-Control-Allow-Methods",
     " PUT,POST, GET, PATCH, DELETE, OPTIONS"
