@@ -7,7 +7,6 @@ const connectDb = async (callback) => {
     const data = await MongoClient.connect(
       `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.zpfzyiz.mongodb.net/${process.env.MONGO_DEFAULT_DATA}?retryWrites=true&w=majority&ssl=true`
     );
-    console.log(data);
     _db = data.db();
     callback();
   } catch (err) {

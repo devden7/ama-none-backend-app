@@ -10,11 +10,13 @@ const connectDb = require("./util/database").connectDb;
 const adminRoutes = require("./routes/admin.js");
 const productRoutes = require("./routes/products.js");
 //setCors
+const linkOrigin = ["http://localhost:3000", " https://amanone-app.vercel.app"];
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", [
-    "http://localhost:3000",
-    " https://amanone-app.vercel.app",
-  ]);
+  const origin = req.headers.origin;
+  console.log(origin);
+  if (linkOrigin.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
   res.setHeader(
     "Access-Control-Allow-Methods",
     " PUT,POST, GET, PATCH, DELETE, OPTIONS"
@@ -38,7 +40,6 @@ app.use((error, req, res, next) => {
   });
 });
 
-console.log(process.env);
 connectDb(() => {
   app.listen(process.env.PORT || 8080);
 });
