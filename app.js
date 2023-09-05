@@ -13,7 +13,7 @@ const productRoutes = require("./routes/products.js");
 app.use((req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
-    "https://amanone-app.vercel.app"
+    "http://localhost:3000, https://amanone-app.vercel.app"
   );
   res.setHeader(
     "Access-Control-Allow-Methods",

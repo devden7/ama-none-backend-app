@@ -2,7 +2,6 @@ const mongodb = require("mongodb");
 const MongoClient = mongodb.MongoClient;
 
 let _db;
-console.log(process.env);
 const connectDb = async (callback) => {
   try {
     const data = await MongoClient.connect(
