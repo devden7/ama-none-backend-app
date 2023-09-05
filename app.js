@@ -10,7 +10,7 @@ const connectDb = require("./util/database").connectDb;
 const adminRoutes = require("./routes/admin.js");
 const productRoutes = require("./routes/products.js");
 //setCors
-const linkOrigin = ["http://localhost:3000", " https://amanone-app.vercel.app"];
+const linkOrigin = ["http://localhost:3000", "https://amanone-app.vercel.app"];
 app.use((req, res, next) => {
   const origin = req.headers.origin;
 
