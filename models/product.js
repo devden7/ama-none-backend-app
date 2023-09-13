@@ -291,6 +291,7 @@ class Product {
 
   static async reviewProduct(
     prodId,
+    orderId,
     userId,
     userName,
     rating,
@@ -299,16 +300,46 @@ class Product {
   ) {
     const userAkunId = new mongodb.ObjectId(userId);
     const db = takeDb();
+    const cariOrder = await db.collection("orders").findOne({
+      _id: new mongodb.ObjectId(orderId),
+    });
+
+    for (let i = 0; i < cariOrder.detailOrderan.items.length; i++) {
+      if (cariOrder.detailOrderan.items[i].id === prodId) {
+        //update isReview
+        cariOrder.detailOrderan.items[i].isReview = true;
+        cariOrder.detailOrderan.items[i].review = {
+          rating,
+          review,
+          tanggalReview: tanggal,
+        };
+        await db.collection("orders").updateOne(
+          { _id: new mongodb.ObjectId(orderId) },
+          {
+            $set: { detailOrderan: cariOrder.detailOrderan },
+          }
+        );
+      }
+    }
+
     const cariReviewField = await db
       .collection("products")
       .findOne({ _id: new mongodb.ObjectId(prodId) });
 
+    let result = 0;
+
     const totalRating = cariReviewField.review.reduce((quantity, item) => {
-      return quantity + item.accountInfo.rating;
+      result = quantity + rating;
+      return result + item.accountInfo.rating;
     }, 0);
 
     const calcRating = parseFloat(
-      (totalRating / cariReviewField.review.length).toFixed(1)
+      (
+        totalRating /
+        (cariReviewField.review.length === 0
+          ? []
+          : cariReviewField.review.length + 1)
+      ).toFixed(1)
     );
     await db.collection("products").updateOne(
       { _id: new mongodb.ObjectId(prodId) },
@@ -322,7 +353,7 @@ class Product {
               userName,
               rating,
               review,
-              tanggal,
+              tanggalReview: tanggal,
             },
           },
         },

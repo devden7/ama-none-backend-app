@@ -3,7 +3,7 @@ const { body } = require("express-validator");
 const router = express.Router();
 const takeDb = require("../util/database").takeDb;
 const adminController = require("../controller/admin");
-const isAuth = require("../middleware/is-auth");
+const isAuth = require("../middleware/is-auth").authAdmin;
 
 //mengambil product path=/product
 router.get("/products", isAuth, adminController.getProductAdmin);

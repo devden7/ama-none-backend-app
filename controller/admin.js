@@ -16,7 +16,6 @@ exports.addProduct = async (req, res, next) => {
   const review = req.body.review;
   const rating = req.body.rating;
   const createdAt = req.body.createdAt;
-  const body = req.body;
 
   const product = new Product(
     nama,
@@ -30,6 +29,7 @@ exports.addProduct = async (req, res, next) => {
     rating,
     createdAt
   );
+
   try {
     if (!errors.isEmpty()) {
       const error = new Error(
@@ -120,12 +120,11 @@ exports.sendDeleteProduct = async (req, res, next) => {
 exports.registerAccount = async (req, res, next) => {
   const errors = validationResult(req);
 
-  const userId = req.params.userId;
+  const userId = req.userId;
   const nameRegister = req.body.nama;
   const emailRegister = req.body.email;
   const passwordRegister = req.body.password;
   const roleRegister = req.body.role;
-  const passwordRepeatRegister = req.body.passwordRepeat;
   const cart = req.body.cart;
   const saltRounds = 10;
   const salt = await bcrypt.genSalt(saltRounds);

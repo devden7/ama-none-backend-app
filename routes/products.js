@@ -2,7 +2,7 @@ const express = require("express");
 const { body } = require("express-validator");
 const router = express.Router();
 const productController = require("../controller/products");
-const isAuth = require("../middleware/is-auth");
+const isAuth = require("../middleware/is-auth").authUser;
 
 //mengambil product path=/product
 router.get("/product", productController.getProduct);
@@ -26,10 +26,10 @@ router.post("/add-cart", isAuth, productController.postCart);
 router.get("/get-cart", isAuth, productController.getCart);
 
 //mengurangi quantity pada cart path=/delete-cart
-router.put("/reduce-quantity/:id", productController.reduceQuantity);
+router.put("/reduce-quantity/:id", isAuth, productController.reduceQuantity);
 
 //menghapus cart path=/delete-cart
-router.delete("/delete-cart/:id", productController.deleteCart);
+router.delete("/delete-cart/:id", isAuth, productController.deleteCart);
 
 //mengirim detail order path=/order
 router.post(
@@ -67,8 +67,10 @@ router.get(
 );
 
 //mengirim review path=/kirim-review
-router.post("/kirim-review/:prodId", productController.postReviewProduct);
-
-router.get("/get-review/:orderId", productController.getReviewProduct);
+router.post(
+  "/kirim-review/:prodId",
+  isAuth,
+  productController.postReviewProduct
+);
 
 module.exports = router;

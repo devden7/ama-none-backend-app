@@ -112,8 +112,9 @@ exports.postCart = async (req, res, next) => {
 };
 
 exports.getCart = async (req, res, next) => {
+  const userId = req.userId;
   try {
-    const cart = await User.getFromCart();
+    const cart = await User.getFromCart(userId);
     res.status(200).json({ message: "cart berhasil diambil", items: cart });
   } catch (err) {
     if (!err.statusCode) {
@@ -125,8 +126,9 @@ exports.getCart = async (req, res, next) => {
 
 exports.reduceQuantity = async (req, res, next) => {
   const itemId = req.params.id;
+  const userId = req.userId;
   try {
-    await User.reduceQuantityCart(itemId);
+    await User.reduceQuantityCart(itemId, userId);
     res.status(201).json({ message: "Quantity Ditambahkan" });
   } catch (err) {
     if (!err.statusCode) {
@@ -183,8 +185,9 @@ exports.orderProduct = (req, res, next) => {
 };
 
 exports.getOrder = async (req, res, next) => {
+  const userId = req.userId;
   try {
-    const dataOrder = await User.getOrderData();
+    const dataOrder = await User.getOrderData(userId);
     res.status(200).json({
       message: "Data berhasil di ambil",
       dataOrder,
@@ -217,7 +220,8 @@ exports.getSingleOrder = async (req, res, next) => {
 
 exports.postReviewProduct = async (req, res, next) => {
   const prodId = req.params.prodId;
-  const userId = req.body.userId;
+  const orderId = req.body.orderId;
+  const userId = req.userId;
   const userName = req.body.userName;
   const ratingUser = req.body.rating;
   const reviewUser = req.body.review;
@@ -226,6 +230,7 @@ exports.postReviewProduct = async (req, res, next) => {
   try {
     await Product.reviewProduct(
       prodId,
+      orderId,
       userId,
       userName,
       ratingUser,
@@ -234,22 +239,6 @@ exports.postReviewProduct = async (req, res, next) => {
     );
     res.status(201).json({
       message: "Review Product Terkirim",
-    });
-  } catch (err) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
-    next(err);
-  }
-};
-
-exports.getReviewProduct = async (req, res, next) => {
-  const orderId = req.params.orderId;
-  try {
-    const listReview = await User.getReviewUser(orderId);
-    res.status(200).json({
-      message: "Review diambil",
-      data: listReview,
     });
   } catch (err) {
     if (!err.statusCode) {

@@ -127,13 +127,16 @@ class User {
     return data;
   }
 
-  static async getFromCart() {
+  static async getFromCart(userId) {
     const db = takeDb();
-    const data = await db.collection("users").find({ _id: this._id }).toArray();
+    const data = await db
+      .collection("users")
+      .find({ _id: new ObjectId(this._id || userId) })
+      .toArray();
     return data;
   }
 
-  static async reduceQuantityCart(id) {
+  static async reduceQuantityCart(id, userId) {
     // 1. cari index dari item cart
     const cariItemIndex = this.cart.findIndex(
       (itemIndex) => itemIndex.id === id
@@ -165,10 +168,7 @@ class User {
 
     const data = await db
       .collection("users")
-      .updateOne(
-        { _id: new ObjectId(this._id) },
-        { $set: { cart: itemInCart } }
-      );
+      .updateOne({ _id: new ObjectId(userId) }, { $set: { cart: itemInCart } });
 
     return data;
   }
@@ -210,7 +210,7 @@ class User {
           accountInfo: { _id: findCartUser._id, namaAkun: findCartUser.nama },
           detailOrderan: {
             userInfoPenerima,
-            tanggal,
+            tanggalOrder: tanggal,
             totalBelanja,
             pembayaran: pembayaran.viaPembayaran,
             statusOrder,
@@ -228,12 +228,11 @@ class User {
     }
   }
 
-  static async getOrderData() {
+  static async getOrderData(id) {
     const db = takeDb();
     const findCartUser = await db
       .collection("users")
-      .findOne({ _id: new ObjectId(this._id) });
-
+      .findOne({ _id: new ObjectId(id) });
     const data = await db
       .collection("orders")
       .find({
@@ -322,7 +321,7 @@ class User {
       }
     }
 
-    const updateOrder = await db.collection("orders").updateOne(
+    await db.collection("orders").updateOne(
       { _id: new ObjectId(id) },
       {
         $set: {
@@ -330,40 +329,6 @@ class User {
         },
       }
     );
-  }
-
-  static async getReviewUser(orderId) {
-    const db = takeDb();
-
-    const cariOrder = await db
-      .collection("orders")
-      .find({ _id: new ObjectId(orderId) })
-      .toArray();
-    const cariProduct = await db.collection("products").find().toArray();
-
-    let cariReview;
-    let data = [];
-    for (let i = 0; i < cariOrder[0].detailOrderan.items.length; i++) {
-      for (let j = 0; j < cariProduct.length; j++) {
-        if (
-          new ObjectId(cariOrder[0].detailOrderan.items[i].id).toString() ===
-          cariProduct[j]._id.toString()
-        ) {
-          for (let k = 0; k < cariProduct[j].review.length; k++) {
-            if (
-              new ObjectId(
-                cariProduct[j].review[k].accountInfo.userId
-              ).toString() === this._id.toString()
-            ) {
-              cariReview = cariProduct[j].review[k];
-              data.push(cariReview);
-            }
-          }
-        }
-      }
-    }
-
-    return data;
   }
 }
 
