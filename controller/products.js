@@ -3,6 +3,13 @@ const { validationResult } = require("express-validator");
 const Product = require("../models/product");
 const User = require("../models/users");
 
+exports.getInitUser = async (req, res, next) => {
+  const userId = req.userId;
+  await User.initAccount(userId);
+
+  res.status(200).json({ message: "data dari localStorage terindentifikasi" });
+};
+
 exports.getProduct = async (req, res, next) => {
   try {
     const product = await Product.getProduct();

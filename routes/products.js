@@ -73,4 +73,6 @@ router.post(
   productController.postReviewProduct
 );
 
+router.get("/get-user-account", isAuth, productController.getInitUser);
+
 module.exports = router;

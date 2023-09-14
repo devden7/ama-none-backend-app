@@ -22,6 +22,26 @@ class User {
     return data;
   }
 
+  static async initAccount(userId) {
+    const db = takeDb();
+    if (!userId) {
+      const error = new Error("Silahkan login terlebih dahulu");
+      error.statusCode = 401;
+      throw error;
+    }
+
+    const user = await db
+      .collection("users")
+      .findOne({ _id: new ObjectId(userId) });
+
+    this._id = user._id;
+    this.nama = user.nama;
+    this.email = user.email;
+    this.password = user.password;
+    this.cart = user.cart;
+    this.role = user.role;
+  }
+
   static async findUser(email, password) {
     //jika user tidak memasukan email sama sekali
     if (!email) {
